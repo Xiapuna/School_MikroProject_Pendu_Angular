@@ -1,0 +1,88 @@
+<div class="game-layout">
+  <div class="game-area">
+    <div class="hangman-container">
+      <svg id="hangman" width="300" height="350" viewBox="0 0 300 350" class="stroke-primary">
+        <g id="base" class="opacity-30">
+          <line x1="20" y1="330" x2="180" y2="330" stroke-width="4" />
+          <line x1="50" y1="330" x2="50" y2="20" stroke-width="4" />
+          <line x1="50" y1="20" x2="150" y2="20" stroke-width="4" />
+          <line x1="150" y1="20" x2="150" y2="60" stroke-width="4" />
+        </g>
+
+        <g id="error-1" [class]="hangman_pieces_visibility[0]">
+          <circle cx="150" cy="90" r="30" fill="none" stroke-width="4" />
+        </g>
+
+        <g id="error-2" [class]="hangman_pieces_visibility[1]">
+          <line x1="150" y1="120" x2="150" y2="220" stroke-width="4" />
+        </g>
+
+        <g id="error-3" [class]="hangman_pieces_visibility[2]">
+          <line x1="150" y1="140" x2="110" y2="180" stroke-width="4" />
+        </g>
+
+        <g id="error-4" [class]="hangman_pieces_visibility[3]">
+          <line x1="150" y1="140" x2="190" y2="180" stroke-width="4" />
+        </g>
+
+        <g id="error-5" [class]="hangman_pieces_visibility[4]">
+          <line x1="150" y1="220" x2="110" y2="280" stroke-width="4" />
+          <line x1="150" y1="220" x2="190" y2="280" stroke-width="4" />
+        </g>
+      </svg>
+    </div>
+
+    <div class="word-container">
+      <div id="word-display" class="word-display">
+        @for (letter of word_display; track $index) {
+          <span class="letter-placeholder">{{ letter }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="card bg-base-200 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">Lettres jouées</h2>
+          <div class="text-center">
+            <p class="hint-text">Tapez une lettre au clavier</p>
+            <div id="letters-used" class="letters-container">
+              <div id="right-letters" class="text-green-600">
+                @for (letter of list_right_letters; track $index) {
+                  {{ letter }},
+                }
+              </div>
+              <div id="wrong-letters" class="text-red-600">
+                @for (letter of list_wrong_letters; track $index) {
+                  {{ letter }},
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bg-base-200 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">Actions</h2>
+          <button class="btn btn-primary btn-block" (click)="startNewGame()">
+            Nouvelle Partie
+          </button>
+          <button class="btn btn-outline btn-block">Historique des parties</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (isGameOver) {
+  <dialog id="game-over-modal" class="modal" open="">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Partie terminée !</h3>
+      <p class="py-4" id="game-result">{{ game_over_message }}</p>
+      <div class="modal-action">
+        <button class="btn btn-primary" (click)="startNewGame()">Rejouer</button>
+      </div>
+    </div>
+  </dialog>
+}
