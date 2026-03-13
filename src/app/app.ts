@@ -1,6 +1,5 @@
-import { Component, computed, HostListener, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Game } from '../pages/game/game';
 import { GameData } from '../services/game-data';
 
 @Component({
