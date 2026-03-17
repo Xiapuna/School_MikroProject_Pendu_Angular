@@ -1,6 +1,5 @@
 import { Component, HostListener } from '@angular/core';
 import { GameData } from '../../services/game-data';
-import { HistoryEntry } from '../../services/history-entry';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -14,14 +13,14 @@ export class Game {
 
   gameState: String = 'IDLE';
 
-  word = '';
-  word_display: string[] = [];
+  word: String = '';
+  word_display: String[] = [];
 
-  nb_letters = 0;
-  nb_letters_found = 0;
-  list_right_letters: string[] = [];
-  list_wrong_letters: string[] = [];
-  letters_played = '';
+  nb_letters: number = 0;
+  nb_letters_found: number = 0;
+  list_right_letters: String[] = [];
+  list_wrong_letters: String[] = [];
+  letters_played: String = '';
 
   game_over_message: string = '';
 
@@ -46,6 +45,7 @@ export class Game {
 
     // Choosing new word
     let random_index = Math.floor(Math.random() * this.gameData.WORDS.length);
+    // console.log(this.gameData.WORDS);
     this.word = this.gameData.WORDS[random_index];
     this.nb_letters = this.word.length;
 
@@ -59,7 +59,6 @@ export class Game {
   @HostListener('document:keydown', ['$event'])
   getPlayerInput(event: KeyboardEvent): void {
     if (this.gameState != 'GAME_ON') return;
-    console.log('input detected');
 
     let letter = event.key.toUpperCase();
 

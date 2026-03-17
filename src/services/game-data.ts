@@ -1,11 +1,17 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HistoryEntry } from './history-entry';
+import { GameDataSource } from './words-list-source';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameData {
-  readonly WORDS = ['MAGIC', 'CARROT', 'INSUFFERABLE'];
+  // constructor(public gameDataSource: GameDataSource) {}
+
+  test = inject(GameDataSource);
+
+  readonly WORDS = this.test.buildWordsList();
+  // readonly WORDS = ['CARROT', 'MAGIC', 'INSUFFERABLE'];
   readonly ERRORS_MAX = 5;
   record: number = 0;
   nb_errors = 0;
@@ -29,9 +35,6 @@ export class GameData {
       nbErrors: nbErrors,
       isWon: isWon,
     };
-    console.log(entry);
-    console.log(this.history());
     this.history.update((oldHistory) => [...oldHistory, entry]);
-    console.log(this.history());
   }
 }
