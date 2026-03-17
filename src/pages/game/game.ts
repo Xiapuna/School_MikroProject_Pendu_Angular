@@ -1,16 +1,18 @@
 import { Component, HostListener } from '@angular/core';
 import { GameData } from '../../services/game-data';
+import { HistoryEntry } from '../../services/history-entry';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'game',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './game.html',
   styleUrl: './game.css',
 })
 export class Game {
   constructor(public gameData: GameData) {}
 
-  isGameOver = false;
+  gameState: String = 'IDLE';
 
   word = '';
   word_display: string[] = [];
@@ -26,12 +28,11 @@ export class Game {
   hangman_pieces_visibility: string[] = ['hidden', 'hidden', 'hidden', 'hidden', 'hidden'];
 
   startNewGame(): void {
-    // Hiding modal
-    this.isGameOver = false;
+    this.gameState = 'GAME_ON';
 
     // Resetting hangman to hidden
     for (let i = 0; i < 5; i++) {
-      this.setHangmanPieceVisibility(i, 'hidden');
+      this.setHangmanPieceVisibility(i, false);
     }
 
     // Resetting error counter
@@ -57,7 +58,7 @@ export class Game {
 
   @HostListener('document:keydown', ['$event'])
   getPlayerInput(event: KeyboardEvent): void {
-    if (this.isGameOver) return;
+    if (this.gameState != 'GAME_ON') return;
     console.log('input detected');
 
     let letter = event.key.toUpperCase();
@@ -85,21 +86,36 @@ export class Game {
           // Add letter to wrong letters
           this.list_wrong_letters.push(letter);
           this.gameData.nb_errors += 1;
-          this.setHangmanPieceVisibility(this.gameData.nb_errors - 1, 'opacity-30');
+          this.setHangmanPieceVisibility(this.gameData.nb_errors - 1, true);
 
           // Check if LOST
           if (this.gameData.nb_errors >= this.gameData.ERRORS_MAX) {
             this.showWord();
-            // localStorage.setItem('record', 0);
+            this.gameData.record = 0;
             this.game_over_message = 'DEFAITE :(';
-            this.isGameOver = true;
+            this.gameState = 'GAME_OVER';
+            this.gameData.addEntryToHistory(
+              new Date(),
+              this.word,
+              this.list_right_letters,
+              this.gameData.nb_errors,
+              false,
+            );
           }
         } else {
           // Check if WON
           if (this.nb_letters_found >= this.nb_letters) {
             this.gameData.incrementRecord(1);
             this.game_over_message = 'VICTOIRE ! :D';
-            this.isGameOver = true;
+            this.gameState = 'GAME_OVER';
+
+            this.gameData.addEntryToHistory(
+              new Date(),
+              this.word,
+              this.list_right_letters,
+              this.gameData.nb_errors,
+              true,
+            );
           }
         }
       }
@@ -112,8 +128,8 @@ export class Game {
     }
   }
 
-  setHangmanPieceVisibility(id_piece: number, visibility: string): void {
-    this.hangman_pieces_visibility[id_piece] = visibility;
+  setHangmanPieceVisibility(id_piece: number, visibility: boolean): void {
+    this.hangman_pieces_visibility[id_piece] = visibility ? 'opacity-30' : 'hidden';
   }
 
   isLetter(str: string): boolean {

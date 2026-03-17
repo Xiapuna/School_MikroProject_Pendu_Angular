@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
+import { GameData } from '../../services/game-data';
 
 @Component({
   selector: 'hangman-history',
@@ -6,4 +7,10 @@ import { Component } from '@angular/core';
   templateUrl: './hangman-history.html',
   styleUrl: './hangman-history.css',
 })
-export class HangmanHistory {}
+export class HangmanHistory {
+  constructor(public gameData: GameData) {}
+
+  public historyToPrint = computed(() => {
+    return this.gameData.history();
+  });
+}

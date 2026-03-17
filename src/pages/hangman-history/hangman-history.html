@@ -1,1 +1,20 @@
-<p>hangman-history works!</p>
+<table>
+  <thead>
+    <th>Date</th>
+    <th>Mot</th>
+    <th>Lettres trouvées</th>
+    <th>Nombre d'erreurs</th>
+    <th>Statut</th>
+  </thead>
+  <tbody>
+    @for (entry of historyToPrint(); track $index) {
+      <tr>
+        <td>{{ entry.date }}</td>
+        <td>{{ entry.word }}</td>
+        <td>{{ entry.lettersFound }}</td>
+        <td>{{ entry.nbErrors }}</td>
+        <td>{{ entry.isWon ? 'Gagné' : 'Perdu' }}</td>
+      </tr>
+    }
+  </tbody>
+</table>

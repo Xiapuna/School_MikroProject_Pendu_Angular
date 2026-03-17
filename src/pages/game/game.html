@@ -68,20 +68,33 @@
           <button class="btn btn-primary btn-block" (click)="startNewGame()">
             Nouvelle Partie
           </button>
-          <button class="btn btn-outline btn-block">Historique des parties</button>
+          <button class="btn btn-outline btn-block" [routerLink]="['/hangman-history']">
+            Historique des parties
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-@if (isGameOver) {
+@if (gameState == 'GAME_OVER') {
   <dialog id="game-over-modal" class="modal" open="">
     <div class="modal-box">
       <h3 class="font-bold text-lg">Partie terminée !</h3>
       <p class="py-4" id="game-result">{{ game_over_message }}</p>
       <div class="modal-action">
         <button class="btn btn-primary" (click)="startNewGame()">Rejouer</button>
+      </div>
+    </div>
+  </dialog>
+}
+
+@if (gameState == 'IDLE') {
+  <dialog id="game-over-modal" class="modal" open="">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Lancer une partie ?</h3>
+      <div class="modal-action">
+        <button class="btn btn-primary" (click)="startNewGame()">Jouer</button>
       </div>
     </div>
   </dialog>
